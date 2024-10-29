@@ -159,4 +159,54 @@ class DemoApplicationTests {
 		assertEquals(1, result.getBuckets().size());
 	}
 
+	@Test
+	void testFillBucketsBucketPriceWithDiscountBasic(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 1);
+		
+		Basket result = basketProcessor.fillBuckets(basket);
+		assertEquals(1, result.getBuckets().size());
+		assertEquals(new BigDecimal(50), result.getBuckets().get(0).getBucketBasePrice());
+		assertEquals(0, result.getBuckets().get(0).getDiscount());
+		assertEquals(new BigDecimal(50), result.getBuckets().get(0).getBucketPrice());
+		assertEquals(new BigDecimal(50), basket.getTotal());
+
+		basket.addBookToBasket("book2", 1);
+		Basket result2 = basketProcessor.fillBuckets(basket);
+		assertEquals(1, result2.getBuckets().size());
+		assertEquals(new BigDecimal(100), result2.getBuckets().get(0).getBucketBasePrice());
+		assertEquals(5, result2.getBuckets().get(0).getDiscount());
+		assertEquals(new BigDecimal(95), result2.getBuckets().get(0).getBucketPrice());
+		assertEquals(new BigDecimal(95), basket.getTotal());
+
+		basket.addBookToBasket("book3", 1);
+		Basket result3 = basketProcessor.fillBuckets(basket);
+		assertEquals(1, result3.getBuckets().size());
+		assertEquals(new BigDecimal(150), result3.getBuckets().get(0).getBucketBasePrice());
+		assertEquals(10, result3.getBuckets().get(0).getDiscount());
+		assertEquals(new BigDecimal(140), result3.getBuckets().get(0).getBucketPrice());
+		assertEquals(new BigDecimal(140), basket.getTotal());
+
+		basket.addBookToBasket("book4", 1);
+		Basket result4 = basketProcessor.fillBuckets(basket);
+		assertEquals(1, result4.getBuckets().size());
+		assertEquals(new BigDecimal(200), result4.getBuckets().get(0).getBucketBasePrice());
+		assertEquals(20, result4.getBuckets().get(0).getDiscount());
+		assertEquals(new BigDecimal(160), result4.getBuckets().get(0).getBucketPrice());
+		assertEquals(new BigDecimal(160), basket.getTotal());
+
+		basket.addBookToBasket("book5", 1);
+		Basket result5 = basketProcessor.fillBuckets(basket);
+		assertEquals(1, result5.getBuckets().size());
+		assertEquals(new BigDecimal(250), result5.getBuckets().get(0).getBucketBasePrice());
+		assertEquals(25, result5.getBuckets().get(0).getDiscount());
+		assertEquals(new BigDecimal(187.50), result5.getBuckets().get(0).getBucketPrice());
+		assertEquals(new BigDecimal(187.50), basket.getTotal());
+
+		
+
+
+	}
+
+
 }
