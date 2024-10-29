@@ -1,16 +1,26 @@
 package be.bnp.demo;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import be.bnp.demo.models.Book;
+import be.bnp.processor.BasketProcessor;
+import be.bnp.demo.exceptions.BasketException;
 import be.bnp.demo.models.Basket;
 import java.math.BigDecimal;
 
 @SpringBootTest
 class DemoApplicationTests {
+
+	@Autowired
+    private BasketProcessor basketProcessor;
 
 	@Test
 	void contextLoads() {
@@ -25,13 +35,13 @@ class DemoApplicationTests {
 
 	@Test
 	void testGetEmptyBookListInit(){
-		BookApi.initEmptyBookList();
-		assertEquals(0, BookApi.getBookList().size());
+		basketProcessor.initBookList();
+		assertEquals(0, basketProcessor.getBookList().size());
 	}
 	@Test
 	void testGetBookListInit(){
-		BookApi.initBookList();
-		assertEquals(5, BookApi.getBookList().size());
+		basketProcessor.initBookList();
+		assertEquals(5, basketProcessor.getBookList().size());
 	}
 
 	@Test
@@ -49,6 +59,46 @@ class DemoApplicationTests {
 
 		assertEquals(priceExpected, basket.getTotal());
 		assertEquals(0, basket.getBuckets().size());
+	}
+
+	@Test
+	void testValidateBasket(){
+		basketProcessor.initBookList();
+		String basketString1 = """
+				{
+					\"quantities\":{
+						\"book1\" : 1,
+					}
+				}
+				""";
+		String basketString2 = """
+			{
+				\"quantities\":{
+					\"book2\" : 1,
+				}
+			}
+			""";
+		String basketString15 = """
+			{
+				\"quantities\":{
+					\"book15\" : 1,
+				}
+			}
+			""";
+
+		assertDoesNotThrow(()->{
+			Basket b = basketProcessor.validateBasket(basketString1);
+		});
+		assertDoesNotThrow(()->{
+			Basket b = basketProcessor.validateBasket(basketString2);
+		});
+		assertThrows(BasketException.class,()->{
+			Basket b = basketProcessor.validateBasket(basketString15);
+		}
+		);
+		
+		
+		
 	}
 
 }

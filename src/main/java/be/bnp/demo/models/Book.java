@@ -3,9 +3,7 @@ package be.bnp.demo.models;
 import java.math.BigDecimal;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 public class Book {
@@ -16,7 +14,7 @@ public class Book {
     @SerializedName(value="name")
 	@Expose
     private String name;
-    
+
     @SerializedName(value="price")
 	@Expose
     private BigDecimal price;

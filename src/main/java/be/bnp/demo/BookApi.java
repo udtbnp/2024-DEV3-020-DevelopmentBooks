@@ -1,5 +1,8 @@
 package be.bnp.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,43 +10,55 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import be.bnp.demo.models.Book;
-import java.util.List;
-import java.util.ArrayList;
-import java.math.BigDecimal;
+import be.bnp.demo.exceptions.BasketException;
+import be.bnp.demo.models.Basket;
+import be.bnp.processor.BasketProcessor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+
 
 @RestController
 @RequestMapping("/books")
 public class BookApi {
 
-    private static List<Book> bookList;
+    @Autowired
+    private BasketProcessor basketProcessor;
+    
     
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public static String getJsonBookList(){
+    public String getJsonBookList(){
+        basketProcessor.initBookList();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		String gsonString = gson.toJson(getBookList());
+		String gsonString = gson.toJson(basketProcessor.getBookList());
 		return gsonString;
     }
-    public static List<Book> getBookList(){
-		return bookList;
-    }
-    public static void initEmptyBookList(){
-        bookList = new ArrayList<Book>();
-    }
-    public static void initBookList(){
-        bookList = new ArrayList<Book>();
-        Book book1 = new Book("book1", "Book name 1", new BigDecimal(50));
-        Book book2 = new Book("book2", "Book name 2", new BigDecimal(50));
-        Book book3 = new Book("book3", "Book name 3", new BigDecimal(50));
-        Book book4 = new Book("book4", "Book name 4", new BigDecimal(50));
-        Book book5 = new Book("book5", "Book name 5", new BigDecimal(50));
-        bookList.add(book1);
-        bookList.add(book2);
-        bookList.add(book3);
-        bookList.add(book4);
-        bookList.add(book5);
 
+    @RequestMapping(
+        value = "/submitBasket", 
+        method = RequestMethod.POST, 
+        consumes = "application/json;charset=UTF-8", 
+        produces = "application/json;charset=UTF-8"
+        )
+    public String submitBasket(
+        @RequestBody String basketString,
+        HttpServletRequest request,
+		HttpServletResponse response
+    ) throws Exception {
+        Basket basket = null;
+        try {
+            basket = basketProcessor.validateBasket(basketString);
+        } catch (BasketException be) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "invalid basket");
+            return null;
+        }
+
+        basket = basketProcessor.fillBuckets(basket);
+
+
+        basket = basketProcessor.calculatBasketPrice(basket);
+
+
+        return basket.toString();
     }
-
-
 }
