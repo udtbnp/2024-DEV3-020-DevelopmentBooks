@@ -4,6 +4,7 @@ import be.bnp.demo.exceptions.BasketException;
 import be.bnp.demo.models.Basket;
 import be.bnp.demo.models.Book;
 import be.bnp.demo.models.BookQuantity;
+import be.bnp.demo.models.Bucket;
 
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,53 @@ public class BasketProcessor {
     }
 
     public Basket fillBuckets(Basket basket){
+        if (bookList == null){
+            initBookList();
+        }
+
         
-        return null;
+        for (BookQuantity bookQuantity : basket.getQuantities()) {
+            Book bookToAdd = bookMap.get(bookQuantity.getBookId());
+
+            for (int i = 0; i < bookQuantity.getQuantity(); i++) {
+                
+                List<Bucket> buckets= basket.getBuckets();
+                if (buckets.size() == 0){
+                    // easy, add a new bucket with book
+                    Bucket bucket = new Bucket();
+                    bucket.addBookToBucket(bookToAdd);
+                    buckets.add(bucket);
+                    basket.setBuckets(buckets);
+                    continue;
+                }
+
+                // buckets size >=1
+
+                boolean bookAdded = false;
+                for (Bucket bucket : buckets) {
+                    if (bookAdded){
+                        break;
+                    }
+                    if (bucket.hasBook(bookToAdd)){
+                        continue;
+                    }
+                    else {
+                        bucket.addBookToBucket(bookToAdd);
+                        bookAdded  = true;
+                    }
+                }
+                if (!bookAdded){
+                    Bucket bucket = new Bucket();
+                    bucket.addBookToBucket(bookToAdd);
+                    buckets.add(bucket);
+                    basket.setBuckets(buckets);
+                }
+
+            }
+            
+        }
+
+        return basket;
     }
 
     public Basket calculatBasketPrice(Basket basket){

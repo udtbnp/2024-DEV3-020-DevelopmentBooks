@@ -110,7 +110,17 @@ class DemoApplicationTests {
 	}
 
 	@Test
-	void testFillBuckets(){
+	void testFillBucketsBucketBasePrice(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 1);
+
+		Basket result = basketProcessor.fillBuckets(basket);
+
+		assertEquals(new BigDecimal(50), result.getBuckets().get(0).getBucketBasePrice());
+	}
+
+	@Test
+	void testFillBucketsOneBookNoCheck(){
 		Basket basket = new Basket();
 		basket.addBookToBasket("book1", 1);
 
@@ -119,7 +129,34 @@ class DemoApplicationTests {
 
 		Basket result = basketProcessor.fillBuckets(basket);
 
-		assertEquals(bucket, result.getBuckets().get(0));
+		// check one bucket in basket
+		assertEquals(1, result.getBuckets().size());
+		assertEquals(bucket.getBookList().get(0), result.getBuckets().get(0).getBookList().get(0));
+	}
+
+	@Test
+	void testFillBucketsTwoSameBooks(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 1);
+		basket.addBookToBasket("book1", 1);
+		
+		Basket result = basketProcessor.fillBuckets(basket);
+
+		assertEquals(2, result.getBuckets().size());
+	}
+
+	@Test
+	void testFillBucketsTwoDifferentBooks(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 1);
+		basket.addBookToBasket("book2", 1);
+
+		Bucket bucket = new Bucket();
+		bucket.addBookToBucket(basketProcessor.getBookList().get(0));
+
+		Basket result = basketProcessor.fillBuckets(basket);
+
+		assertEquals(1, result.getBuckets().size());
 	}
 
 }

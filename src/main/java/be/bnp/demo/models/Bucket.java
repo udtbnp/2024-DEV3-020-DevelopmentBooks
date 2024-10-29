@@ -52,7 +52,7 @@ public class Bucket {
         this.discount = discount;
     }
 
-    public BigDecimal bucketPrice(){
+    public BigDecimal getBucketPrice(){
         return bucketPrice;
     }
 
@@ -60,7 +60,7 @@ public class Bucket {
         this.bucketPrice = buckPrice;
     }
 
-    public BigDecimal bucketBasePrice(){
+    public BigDecimal getBucketBasePrice(){
         return bucketBasePrice;
     }
 
@@ -78,10 +78,15 @@ public class Bucket {
         BigDecimal basePrice = new BigDecimal(0);
         for (Book b : bookMap.values()) {
             bookList.add(b);
-            basePrice.add(b.getPrice());
+            basePrice = basePrice.add(b.getPrice());
         }
+        bucketBasePrice = basePrice;
 
         return true;
+    }
+
+    public boolean hasBook(Book book){
+        return bookMap.get(book.getId()) != null;
     }
 
     public String toString(){
