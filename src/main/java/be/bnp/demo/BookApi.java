@@ -18,7 +18,7 @@ public class BookApi {
 
     private static List<Book> bookList;
     
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public static String getJsonBookList(){
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String gsonString = gson.toJson(getBookList());

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import be.bnp.demo.models.Book;
+import be.bnp.demo.models.Basket;
 import java.math.BigDecimal;
 
 @SpringBootTest
@@ -39,6 +40,15 @@ class DemoApplicationTests {
 		String expected = "{\"id\":\"book1\",\"name\":\"Book name 1\",\"price\":50}";
 		assertEquals(expected, book.toString());
 
+	}
+
+	@Test
+	void testEmptyBasket(){
+		Basket basket = new Basket();
+		BigDecimal priceExpected = new BigDecimal(0);
+
+		assertEquals(priceExpected, basket.getTotal());
+		assertEquals(0, basket.getBuckets().size());
 	}
 
 }

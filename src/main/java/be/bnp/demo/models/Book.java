@@ -12,9 +12,11 @@ public class Book {
     @SerializedName(value="id", alternate={"ID","Id"})
 	@Expose
     private String id;
+
     @SerializedName(value="name")
 	@Expose
     private String name;
+    
     @SerializedName(value="price")
 	@Expose
     private BigDecimal price;
