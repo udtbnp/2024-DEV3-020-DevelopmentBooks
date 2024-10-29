@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import be.bnp.demo.models.Book;
+import be.bnp.demo.models.Bucket;
 import be.bnp.processor.BasketProcessor;
 import be.bnp.demo.exceptions.BasketException;
 import be.bnp.demo.models.Basket;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootTest
 class DemoApplicationTests {
@@ -72,7 +71,8 @@ class DemoApplicationTests {
 					\"quantities\":[
 						{
 							\"bookId\" : \"book1\",
-							\"quantity\" : 1}
+							\"quantity\" : 1
+						}
 					]
 				}
 				""";
@@ -81,7 +81,8 @@ class DemoApplicationTests {
 				\"quantities\":[
 						{
 							\"bookId\" : \"book2\",
-							\"quantity\" : 1}
+							\"quantity\" : 1
+						}
 					]
 			}
 			""";
@@ -90,7 +91,8 @@ class DemoApplicationTests {
 				\"quantities\":[
 						{
 							\"bookId\" : \"book15\",
-							\"quantity\" : 1}
+							\"quantity\" : 1
+						}
 					]
 			}
 			""";
@@ -105,9 +107,19 @@ class DemoApplicationTests {
 			Basket b15 = basketProcessor.validateBasket(basketString15);
 		}
 		);
-		
-		
-		
+	}
+
+	@Test
+	void testFillBuckets(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 1);
+
+		Bucket bucket = new Bucket();
+		bucket.addBookToBucket(basketProcessor.getBookList().get(0));
+
+		Basket result = basketProcessor.fillBuckets(basket);
+
+		assertEquals(bucket, result.getBuckets().get(0));
 	}
 
 }

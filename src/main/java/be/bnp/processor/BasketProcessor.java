@@ -25,6 +25,9 @@ public class BasketProcessor {
     private static Map<String, Book> bookMap;
 
     public List<Book> getBookList(){
+        if (bookList == null){
+            initBookList();
+        }
 		return bookList;
     }
     public Map<String, Book> getBookMap(){
@@ -84,7 +87,7 @@ public class BasketProcessor {
     }
 
     public Basket fillBuckets(Basket basket){
-
+        
         return null;
     }
 
