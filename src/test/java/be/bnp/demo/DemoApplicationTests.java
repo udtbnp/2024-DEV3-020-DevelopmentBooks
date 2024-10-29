@@ -205,6 +205,17 @@ class DemoApplicationTests {
 
 	}
 
+	@Test
+	void testComplexBucketsPriority(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 2);
+		basket.addBookToBasket("book2", 2);
+		basket.addBookToBasket("book3", 2);
+		basket.addBookToBasket("book4", 1);
+		basket.addBookToBasket("book5", 1);
 
+		basketProcessor.fillBuckets(basket);
+		assertEquals(new BigDecimal("320"), basket.getTotal());
+	}
 	
 }
