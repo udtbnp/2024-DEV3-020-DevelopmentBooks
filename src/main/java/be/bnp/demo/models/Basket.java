@@ -14,7 +14,9 @@ import com.google.gson.annotations.SerializedName;
 public class Basket {
     @SerializedName(value="quantities")
 	@Expose
-    private Map<String, Integer> quantities;
+    private List<BookQuantity> quantities;
+
+    private Map<String, BookQuantity> mapQuantities;
     
     @SerializedName(value="buckets")
 	@Expose
@@ -25,19 +27,32 @@ public class Basket {
     private BigDecimal total;
 
     public Basket(){
-        this.quantities = new HashMap<String, Integer>();
+        this.mapQuantities = new HashMap<String, BookQuantity>();
+        this.quantities = new ArrayList<BookQuantity>();
         this.buckets = new ArrayList<Bucket>();
         this.total = new BigDecimal(0);
     }
 
 
-    public Map<String, Integer> getQuantities() {
+    public List<BookQuantity> getQuantities() {
         return quantities;
     }
 
     public void addBookToBasket(String bookId, int quantity) {
-        if (quantities == null) {
-            quantities = new HashMap<String, Integer>();
+        if (mapQuantities == null) {
+            mapQuantities = new HashMap<String, BookQuantity>();
+        }
+        BookQuantity bq = mapQuantities.get(bookId) ;
+        if ( bq == null ){
+            mapQuantities.put(bookId, new BookQuantity(bookId, quantity));
+        }
+        else {
+            mapQuantities.put(bookId, new BookQuantity(bookId, bq.getQuantity()+ quantity));
+        }
+
+        quantities = new ArrayList<BookQuantity>();
+        for (BookQuantity bqi : mapQuantities.values()) {
+            quantities.add(bqi);
         }
     }
 

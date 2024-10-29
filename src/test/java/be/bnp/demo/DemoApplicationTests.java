@@ -15,6 +15,8 @@ import be.bnp.processor.BasketProcessor;
 import be.bnp.demo.exceptions.BasketException;
 import be.bnp.demo.models.Basket;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class DemoApplicationTests {
@@ -63,37 +65,44 @@ class DemoApplicationTests {
 
 	@Test
 	void testValidateBasket(){
-		basketProcessor.initBookList();
+		
+
 		String basketString1 = """
 				{
-					\"quantities\":{
-						\"book1\" : 1,
-					}
+					\"quantities\":[
+						{
+							\"bookId\" : \"book1\",
+							\"quantity\" : 1}
+					]
 				}
 				""";
 		String basketString2 = """
 			{
-				\"quantities\":{
-					\"book2\" : 1,
-				}
+				\"quantities\":[
+						{
+							\"bookId\" : \"book2\",
+							\"quantity\" : 1}
+					]
 			}
 			""";
 		String basketString15 = """
 			{
-				\"quantities\":{
-					\"book15\" : 1,
-				}
+				\"quantities\":[
+						{
+							\"bookId\" : \"book15\",
+							\"quantity\" : 1}
+					]
 			}
 			""";
 
 		assertDoesNotThrow(()->{
-			Basket b = basketProcessor.validateBasket(basketString1);
+			Basket b1 = basketProcessor.validateBasket(basketString1);
 		});
 		assertDoesNotThrow(()->{
-			Basket b = basketProcessor.validateBasket(basketString2);
+			Basket b2 = basketProcessor.validateBasket(basketString2);
 		});
 		assertThrows(BasketException.class,()->{
-			Basket b = basketProcessor.validateBasket(basketString15);
+			Basket b15 = basketProcessor.validateBasket(basketString15);
 		}
 		);
 		
