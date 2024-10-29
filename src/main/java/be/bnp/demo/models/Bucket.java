@@ -75,12 +75,41 @@ public class Bucket {
         bookMap.put(book.getId(), book);
         bookList = new ArrayList<Book>();
         
+        int discountVal = 0;
+        switch (bookMap.keySet().size()){
+            case 0:
+                discountVal = 0;
+                break;
+            case 1:
+                discountVal = 0;
+                break;
+            case 2:
+                discountVal = 5;
+                break;
+            case 3:
+                discountVal = 10;
+                break;
+            case 4:
+                discountVal = 20;
+                break;
+            case 5:
+                discountVal = 25;
+                break;
+            default:
+                discountVal = 0;
+            
+        }
+
+        discount = discountVal;
+
         BigDecimal basePrice = new BigDecimal(0);
         for (Book b : bookMap.values()) {
             bookList.add(b);
             basePrice = basePrice.add(b.getPrice());
         }
         bucketBasePrice = basePrice;
+
+        bucketPrice = bucketBasePrice.multiply(new BigDecimal(100 - discount).divide(new BigDecimal(100)));
 
         return true;
     }

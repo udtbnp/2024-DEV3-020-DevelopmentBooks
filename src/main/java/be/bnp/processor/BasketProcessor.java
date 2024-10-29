@@ -92,6 +92,7 @@ public class BasketProcessor {
             initBookList();
         }
 
+        basket.setBuckets(new ArrayList<Bucket>());
         
         for (BookQuantity bookQuantity : basket.getQuantities()) {
             Book bookToAdd = bookMap.get(bookQuantity.getBookId());
@@ -134,12 +135,14 @@ public class BasketProcessor {
             
         }
 
+        BigDecimal bigTotal = new BigDecimal(0);
+        for (Bucket bucket : basket.getBuckets()) {
+            bigTotal = bigTotal.add(bucket.getBucketPrice());
+        }
+        basket.setTotal(bigTotal);
+
+
         return basket;
-    }
-
-    public Basket calculatBasketPrice(Basket basket){
-
-        return null;
     }
     
 }

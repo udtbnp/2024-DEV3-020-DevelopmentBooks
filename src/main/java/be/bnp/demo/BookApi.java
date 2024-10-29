@@ -55,8 +55,6 @@ public class BookApi {
 
         basket = basketProcessor.fillBuckets(basket);
 
-        basket = basketProcessor.calculatBasketPrice(basket);
-
         return basket.toString();
     }
 }
