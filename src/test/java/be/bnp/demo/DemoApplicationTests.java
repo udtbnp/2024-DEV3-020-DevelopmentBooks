@@ -2,8 +2,6 @@ package be.bnp.demo;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -36,7 +34,7 @@ class DemoApplicationTests {
 
 	@Test
 	void testGetEmptyBookListInit(){
-		basketProcessor.initBookList();
+		basketProcessor.initEmptyBookList();
 		assertEquals(0, basketProcessor.getBookList().size());
 	}
 	@Test
@@ -206,6 +204,18 @@ class DemoApplicationTests {
 	}
 
 	@Test
+	void testComplexBucketsPriority0(){
+		Basket basket = new Basket();
+		basket.addBookToBasket("book1", 2);
+		basket.addBookToBasket("book2", 1);
+		basket.addBookToBasket("book3", 1);
+		
+
+		basketProcessor.fillBuckets(basket);
+		assertEquals(new BigDecimal("185.0"), basket.getTotal());
+	}
+
+	@Test
 	void testComplexBucketsPriority(){
 		Basket basket = new Basket();
 		basket.addBookToBasket("book1", 2);
@@ -215,7 +225,7 @@ class DemoApplicationTests {
 		basket.addBookToBasket("book5", 1);
 
 		basketProcessor.fillBuckets(basket);
-		assertEquals(new BigDecimal("320"), basket.getTotal());
+		assertEquals(new BigDecimal("320.0"), basket.getTotal());
 	}
 	
 }

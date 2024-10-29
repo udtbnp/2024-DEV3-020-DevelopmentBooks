@@ -5,6 +5,7 @@ import be.bnp.demo.models.Basket;
 import be.bnp.demo.models.Book;
 import be.bnp.demo.models.BookQuantity;
 import be.bnp.demo.models.Bucket;
+import be.bnp.demo.models.BucketComparator;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.math.BigDecimal;
 
@@ -132,7 +134,10 @@ public class BasketProcessor {
                 }
 
             }
-            
+            //System.out.println("before : "+ basket.getBuckets().toString());
+            List<Bucket> buckets = sortBuckets(basket);
+            //System.out.println("after : "+ buckets.toString());
+            basket.setBuckets(buckets);
         }
 
         BigDecimal bigTotal = new BigDecimal(0);
@@ -143,6 +148,17 @@ public class BasketProcessor {
 
 
         return basket;
+    }
+
+    private List<Bucket> sortBuckets(Basket basket){
+        try {
+            List<Bucket> buckets = basket.getBuckets();
+            Collections.sort(buckets, new BucketComparator());
+        }
+        catch (Exception e){
+            System.err.println("no time to do better for the moment");
+        }
+        return basket.getBuckets();
     }
     
 }
